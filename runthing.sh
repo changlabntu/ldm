@@ -1,0 +1,2 @@
+#python main.py --base configs/autoencoder/autoencoder_kl_32x32x4_DPM4X.yaml -t --gpus 0,1,2,3,4,5
+python main.py --base configs/latent-diffusion/yztoxy_ori_DPM4x.yaml -t --gpus 0,1,2,3,4,5
