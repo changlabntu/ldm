@@ -58,15 +58,18 @@ if __name__ == "__main__":
     )
     opt = parser.parse_args()
 
+    # !!!
     yz_dataset = ZEnhanceDataset(data_root=['/home/meng-yun/Projects/rb_vessel/Dataset/8x_yz_torchup/'], data_len=[0,50], 
-                                    mask_config={"direction": "horizontal", "down_size": 8},
+                                    mask_config={"direction": "horizontal", "down_size": 8}, # this is not being used
                                     image_size=512, mode='test')
     eval_dataloader = data.DataLoader(dataset=yz_dataset, batch_size=1,
                                        num_workers=10, drop_last=True)
 
+    # !!!
     config = OmegaConf.load("logs/2024-04-27T11-59-39_yztoxy_ori/configs/2024-04-27T11-59-39-project.yaml")
 
     model = instantiate_from_config(config.model)
+    # !!!
     model.load_state_dict(torch.load("logs/2024-04-27T11-59-39_yztoxy_ori/checkpoints/epoch=001873.ckpt")["state_dict"],
                           strict=True)
 
@@ -108,6 +111,7 @@ if __name__ == "__main__":
                 predicted_image = torch.clamp((x_samples_ddim+1.0)/2.0, min=0.0, max=1.0)
                 # recon = torch.clamp((recon+1.0)/2.0, min=0.0, max=1.0)
                 
+                # !!!!!
                 outpath = os.path.join(opt.outdir, ret['file_path_'][0].replace('.tif', '.png'))
                 predicted_image = (predicted_image.squeeze(0).detach().cpu().numpy() * 255).astype(np.uint8)
                 cv2.imwrite(outpath.replace('.png', f'_pred.png'), np.transpose(np.concatenate([predicted_image, predicted_image, predicted_image], 0), (1, 2, 0)))
