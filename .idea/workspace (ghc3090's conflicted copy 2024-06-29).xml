@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="fde3fb47-f3b8-419f-a155-2dbc414b9850" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ldm/data/yztoxy.py" beforeDir="false" afterPath="$PROJECT_DIR$/ldm/data/yztoxy.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ldm/data/yztoxynorescale.py" beforeDir="false" afterPath="$PROJECT_DIR$/ldm/data/yztoxynorescale.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/runthing.sh" beforeDir="false" afterPath="$PROJECT_DIR$/runthing.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/yztoxy_test.py" beforeDir="false" afterPath="$PROJECT_DIR$/yztoxy_test.py" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="2hByokyNV8VJnLDLsZNDzrmrVao" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/configs/autoencoder" />
+      <recent name="$PROJECT_DIR$/configs/latent-diffusion" />
+      <recent name="$PROJECT_DIR$/ldm/data" />
+    </key>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="fde3fb47-f3b8-419f-a155-2dbc414b9850" name="Changes" comment="" />
+      <created>1717081942193</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1717081942193</updated>
+      <workItem from="1717081944721" duration="918000" />
+      <workItem from="1717085543381" duration="2067000" />
+      <workItem from="1717154033446" duration="16810000" />
+      <workItem from="1718385980470" duration="4994000" />
+      <workItem from="1718598583544" duration="1353000" />
+      <workItem from="1718622294528" duration="724000" />
+      <workItem from="1718706432784" duration="1304000" />
+      <workItem from="1718863688782" duration="790000" />
+      <workItem from="1718880889739" duration="2447000" />
+      <workItem from="1718967669273" duration="54000" />
+      <workItem from="1719227008052" duration="1404000" />
+      <workItem from="1719377690045" duration="599000" />
+      <workItem from="1719467986303" duration="5051000" />
+      <workItem from="1719473511574" duration="4387000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>

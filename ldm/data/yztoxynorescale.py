@@ -63,7 +63,10 @@ class ZEnhanceDataset(Dataset):
         self.loader = loader
         self.down_size = mask_config['down_size']
         self.direction = mask_config['direction']
-        self.mask_type = mask_config['mask_type']
+        try:
+            self.mask_type = mask_config['mask_type']
+        except:
+            self.mask_type = None
         self.image_size = image_size
         self.trd = trd
         self.mode = mode

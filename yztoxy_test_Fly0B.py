@@ -59,19 +59,28 @@ if __name__ == "__main__":
     opt = parser.parse_args()
 
     # !!!
-    yz_dataset = ZEnhanceDataset(data_root=['/home/meng-yun/Projects/rb_vessel/Dataset/8x_yz_torchup/'], data_len=[0,50], 
-                                    mask_config={}, # this is not being used
-                                    image_size=512, mode='test')
+    #yz_dataset = ZEnhanceDataset(data_root=['/media/ExtHDD01/Dataset/paired_images/Fly0B/cycout/yzoridsp/'], data_len=[0,50],
+    yz_dataset = ZEnhanceDataset(data_root=['/media/ExtHDD01/Dataset/paired_images/Fly0B/cycout/xxx/'], data_len=[0, 50],
+                                    mask_config={"direction": "horizontal", "down_size": 8}, # this is not being used
+                                    #mask_type="downsample",
+                                    image_size=256, mode='test')
     eval_dataloader = data.DataLoader(dataset=yz_dataset, batch_size=1,
                                        num_workers=10, drop_last=True)
 
     # !!!
-    config = OmegaConf.load("logs/2024-04-27T11-59-39_yztoxy_ori/configs/2024-04-27T11-59-39-project.yaml")
-
-    model = instantiate_from_config(config.model)
-    # !!!
-    model.load_state_dict(torch.load("logs/2024-04-27T11-59-39_yztoxy_ori/checkpoints/epoch=001873.ckpt")["state_dict"],
-                          strict=True)
+    #config = OmegaConf.load("logs/2024-04-27T11-59-39_yztoxy_ori/configs/2024-04-27T11-59-39-project.yaml")
+    if 1 :
+        config = OmegaConf.load("/media/ExtHDD01/ldmlogs/Fly0B/2024-06-21T15-40-45_yztoxy_ori_Fly0B_gan_ae3_no_lr_scale/configs/2024-06-21T15-40-45-project.yaml")
+        model = instantiate_from_config(config.model)
+        model.load_state_dict(torch.load("/media/ExtHDD01/ldmlogs/Fly0B/"
+                                         "2024-06-21T15-40-45_yztoxy_ori_Fly0B_gan_ae3_no_lr_scale/checkpoints/epoch=006004.ckpt")["state_dict"],
+                              strict=True)
+    else:
+        config = OmegaConf.load("/media/ExtHDD01/ldmlogs/Fly0B/2024-06-20T18-00-21_yztoxy_ori_Fly0B_dsp_ae3_no_lr_scale/configs/2024-06-20T18-00-21-project.yaml")
+        model = instantiate_from_config(config.model)
+        model.load_state_dict(torch.load("/media/ExtHDD01/ldmlogs/Fly0B/"
+                                         "2024-06-20T18-00-21_yztoxy_ori_Fly0B_dsp_ae3_no_lr_scale/checkpoints/epoch=001805.ckpt")["state_dict"],
+                              strict=True)
 
     device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
     #device = torch.device("cpu") # why using cpu??
@@ -112,9 +121,10 @@ if __name__ == "__main__":
                 # recon = torch.clamp((recon+1.0)/2.0, min=0.0, max=1.0)
                 
                 # !!!!!
-                outpath = os.path.join(opt.outdir, ret['file_path_'][0].replace('.tif', '.png'))
+                outpath = os.path.join(opt.outdir, ret['file_path_'][0].replace('.tif', '.tif'))
                 predicted_image = (predicted_image.squeeze(0).detach().cpu().numpy() * 255).astype(np.uint8)
-                cv2.imwrite(outpath.replace('.png', f'_pred.png'), np.transpose(np.concatenate([predicted_image, predicted_image, predicted_image], 0), (1, 2, 0)))
+                tiff.imwrite(outpath, predicted_image)
+                #cv2.imwrite(outpath.replace('.png', f'_pred.png'), np.transpose(np.concatenate([predicted_image, predicted_image, predicted_image], 0), (1, 2, 0)))
 
                 # recon = (recon.squeeze(0).detach().cpu().numpy() * 255).astype(np.uint8)
                 # cv2.imwrite(outpath.replace('.png', f'_recon.png'), np.transpose(np.concatenate([recon, recon, recon], 0), (1, 2, 0)))
@@ -133,4 +143,4 @@ if __name__ == "__main__":
     print('Total time:', e_t-s_t)
 
 # CUDA_VISIBLE_DEVICES=3 python inpaint.py --indir x --outdir /home/ziyi/Projects/latent-diffusion/1225_out
-# CUDA_VISIBLE_DEVICES=3 python yztoxy_test.py --outdir /home/meng-yun/Projects/latent/results/240322
+# CUDA_VISIBLE_DEVICES=0 python yztoxy_test_Fly0B.py --outdir /media/ExtHDD01/Dataset/paired_images/Fly0B/yzori8gan/

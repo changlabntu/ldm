@@ -16,9 +16,10 @@ import random
 
 def tif_loader(path, trd):
     img = tiff.imread(path).astype(np.float32)
+    print((img.min(), img.max()))
     if trd is None:
-        img = (img-img.min())/(img.max()-img.min())
-        #img = img/img.max()
+        #img = (img-img.min())/(img.max()-img.min())
+        img = img/img.max()
     else:
         img = rescale(img, trd)
     return img
