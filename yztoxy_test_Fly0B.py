@@ -10,7 +10,7 @@ import tifffile as tiff
 
 from main import instantiate_from_config
 from ldm.models.diffusion.ddim import DDIMSampler
-from ldm.data.yztoxy import ZEnhanceDataset
+from ldm.data.yztoxynorescale import ZEnhanceDataset
 import cv2
 import time
 
@@ -53,14 +53,14 @@ if __name__ == "__main__":
     parser.add_argument(
         "--steps",
         type=int,
-        default=50,
+        default=200,
         help="number of ddim sampling steps",
     )
     opt = parser.parse_args()
 
     # !!!
     #yz_dataset = ZEnhanceDataset(data_root=['/media/ExtHDD01/Dataset/paired_images/Fly0B/cycout/yzoridsp/'], data_len=[0,50],
-    yz_dataset = ZEnhanceDataset(data_root=['/media/ExtHDD01/Dataset/paired_images/Fly0B/cycout/xxx/'], data_len=[0, 50],
+    yz_dataset = ZEnhanceDataset(data_root=['/media/ExtHDD01/Dataset/paired_images/Fly0B/cycout/ganori/'], data_len=[0, 50],
                                     mask_config={"direction": "horizontal", "down_size": 8}, # this is not being used
                                     #mask_type="downsample",
                                     image_size=256, mode='test')
@@ -69,11 +69,11 @@ if __name__ == "__main__":
 
     # !!!
     #config = OmegaConf.load("logs/2024-04-27T11-59-39_yztoxy_ori/configs/2024-04-27T11-59-39-project.yaml")
-    if 1 :
-        config = OmegaConf.load("/media/ExtHDD01/ldmlogs/Fly0B/2024-06-21T15-40-45_yztoxy_ori_Fly0B_gan_ae3_no_lr_scale/configs/2024-06-21T15-40-45-project.yaml")
+    if 0:
+        config = OmegaConf.load("/media/ExtHDD01/ldmlogs/Fly0B/2024-07-09T12-12-55_yztoxy_ori_Fly0B_gan_ae3_070924/configs/2024-07-09T12-12-55-project.yaml")
         model = instantiate_from_config(config.model)
         model.load_state_dict(torch.load("/media/ExtHDD01/ldmlogs/Fly0B/"
-                                         "2024-06-21T15-40-45_yztoxy_ori_Fly0B_gan_ae3_no_lr_scale/checkpoints/epoch=006004.ckpt")["state_dict"],
+                                         "2024-07-09T12-12-55_yztoxy_ori_Fly0B_gan_ae3_070924/checkpoints/epoch=000943.ckpt")["state_dict"],
                               strict=True)
     else:
         config = OmegaConf.load("/media/ExtHDD01/ldmlogs/Fly0B/2024-06-20T18-00-21_yztoxy_ori_Fly0B_dsp_ae3_no_lr_scale/configs/2024-06-20T18-00-21-project.yaml")
@@ -86,7 +86,6 @@ if __name__ == "__main__":
     #device = torch.device("cpu") # why using cpu??
     model = model.to(device).eval()
     sampler = DDIMSampler(model)
-
 
     os.makedirs(opt.outdir, exist_ok=True)
     s_t = time.time()
@@ -120,10 +119,25 @@ if __name__ == "__main__":
                 predicted_image = torch.clamp((x_samples_ddim+1.0)/2.0, min=0.0, max=1.0)
                 # recon = torch.clamp((recon+1.0)/2.0, min=0.0, max=1.0)
                 
-                # !!!!!
+                # original out
+                #outpath = os.path.join(opt.outdir, ret['file_path_'][0].replace('.tif', '.tif'))
+                #predicted_image = (predicted_image.squeeze(0).detach().cpu().numpy() * 255).astype(np.uint8)
+                #tiff.imwrite(outpath, predicted_image)
                 outpath = os.path.join(opt.outdir, ret['file_path_'][0].replace('.tif', '.tif'))
-                predicted_image = (predicted_image.squeeze(0).detach().cpu().numpy() * 255).astype(np.uint8)
-                tiff.imwrite(outpath, predicted_image)
+                predicted_image = (predicted_image.squeeze(0).detach().cpu().numpy())
+
+                cond_image = cond_image.detach().cpu().numpy()[0, ::]
+
+                # norm by mean and std
+                (predicted_image, cond_image) = (x - x.mean() for x in (predicted_image, cond_image))
+                (predicted_image, cond_image) = (x / x.std() for x in (predicted_image, cond_image))
+
+                combined = np.concatenate([predicted_image, cond_image], 2)
+
+                tiff.imwrite(outpath, combined)
+
+                
+
                 #cv2.imwrite(outpath.replace('.png', f'_pred.png'), np.transpose(np.concatenate([predicted_image, predicted_image, predicted_image], 0), (1, 2, 0)))
 
                 # recon = (recon.squeeze(0).detach().cpu().numpy() * 255).astype(np.uint8)
