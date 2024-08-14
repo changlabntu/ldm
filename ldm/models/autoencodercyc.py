@@ -27,10 +27,6 @@ class AutoencoderKL(pl.LightningModule):
         self.image_key = image_key
         self.encoder = Encoder(**ddconfig)
         self.decoder = Decoder(**ddconfig)
-
-        self.encoderXY = Encoder(**ddconfig)
-        self.decoderXY = Decoder(**ddconfig)
-
         self.loss = instantiate_from_config(lossconfig)
         assert ddconfig["double_z"]
         self.quant_conv = torch.nn.Conv2d(2*ddconfig["z_channels"], 2*embed_dim, 1)
@@ -56,7 +52,6 @@ class AutoencoderKL(pl.LightningModule):
         print(f"Restored from {path}")
 
     def encode(self, x):
-        h = self.encoder(x)
         moments = self.quant_conv(h)
         posterior = DiagonalGaussianDistribution(moments)
         return posterior
@@ -75,26 +70,6 @@ class AutoencoderKL(pl.LightningModule):
         dec = self.decode(z)
         return dec, posterior
 
-    def encodeXY(self, x):
-        h = self.encoderXY(x)
-        moments = self.quant_conv(h)
-        posterior = DiagonalGaussianDistribution(moments)
-        return posterior
-
-    def decodeXY(self, z):
-        z = self.post_quant_conv(z)
-        dec = self.decoderXY(z)
-        return dec
-
-    def forwardXY(self, input, sample_posterior=True):
-        posterior = self.encodeXY(input)
-        if sample_posterior:
-            z = posterior.sample()
-        else:
-            z = posterior.mode()
-        dec = self.decodeXY(z)
-        return dec, posterior
-
     def get_input(self, batch, k):
         x = batch[k]
         if len(x.shape) == 3:
@@ -103,15 +78,8 @@ class AutoencoderKL(pl.LightningModule):
         return x
 
     def training_step(self, batch, batch_idx, optimizer_idx):
-        inputsX = self.get_input(batch, self.image_key)  # image_key = X
-        inputsY = self.get_input(batch, self.image_key)  # image_key = Y
-
-        reconstructionsXX, posterior = self.forward(inputsX)
-        reconstructionsXY, posterior = self.forwardXY(inputsX)
-
-        reconstructionsYX, posterior = self.forward(inputsY)
-        reconstructionsYY, posterior = self.forwardXY(inputsY)
-
+        inputs = self.get_input(batch, self.image_key)
+        reconstructions, posterior = self(inputs)
 
         if optimizer_idx == 0:
             # train encoder+decoder+logvar
@@ -184,35 +152,39 @@ class AutoencoderKL(pl.LightningModule):
         return x
 
 
-class IdentityFirstStage(torch.nn.Module):
-    def __init__(self, *args, vq_interface=False, **kwargs):
-        self.vq_interface = vq_interface  # TODO: Should be true by default but check to not break older stuff
-        super().__init__()
-
-    def encode(self, x, *args, **kwargs):
-        return x
-
-    def decode(self, x, *args, **kwargs):
-        return x
-
-    def quantize(self, x, *args, **kwargs):
-        if self.vq_interface:
-            return x, None, [None, None, None]
-        return x
-
-    def forward(self, x, *args, **kwargs):
-        return x
-
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     import yaml
-    with open('configs/autoencoder/autoencoder_kl_32x32x4.yaml', 'r') as file:
-        config = yaml.load(file, Loader=yaml.FullLoader)
+    from argparse import ArgumentParser
+    from ldm.util import instantiate_from_config
 
-    ae = AutoencoderKL(ddconfig=config['model']['params']['ddconfig'],
-                       lossconfig=config['model']['params']['lossconfig'], embed_dim=4)
+    parser = ArgumentParser()
+    parser.add_argument("--config", type=str, default='configs/autoencoder/Fly0B3x2.yaml')
+    parser.add_argument("--ckpt", type=str, default=None)
+    parser.add_argument("--ignore_keys", type=str, default="")
+    parser.add_argument("--image_key", type=str, default="image")
+    parser.add_argument("--colorize_nlabels", type=int, default=None)
+    parser.add_argument("--monitor", type=str, default=None)
+    parser.add_argument('--mode', type=str, default='dummy')
+    parser.add_argument('--port', type=str, default='dummy')
+    parser.add_argument('--host', type=str, default='dummy')
+
+    args = parser.parse_args()
+
+    with open(args.config, "r") as f:
+        config = yaml.load(f, Loader=yaml.Loader)
+
+    model = AutoencoderKL(
+    ddconfig=config['model']['params']["ddconfig"],
+    lossconfig=config['model']['params']["lossconfig"],
+    embed_dim=config['model']['params']["embed_dim"],
+    ckpt_path = None,
+    ignore_keys = [],
+    image_key = "image",
+    colorize_nlabels = None,
+    monitor = None)
 
     # print number of parameters
-    print(f"Number of parameters: {sum(p.numel() for p in ae.parameters())}")
+    print(sum(p.numel() for p in model.encoder.parameters()))
+    print(sum(p.numel() for p in model.decoder.parameters()))
 
-    x = ae.encode(torch.rand(1, 3, 224, 224))
+    h = model.encoder(torch.rand(1, 1, 256, 256))

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="ec9c9218-4e96-46f0-8ce0-500ff9d5adec" name="BRCb">
+        <fileTransfer rootFolder="/home/" accessType="SFTP" host="140.114.95.45" port="22" sshConfigId="8e9b7275-aa12-49ee-864b-141099329fdd" sshConfig="gary@140.114.95.45:22 password">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
