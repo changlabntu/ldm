@@ -448,20 +448,20 @@ class Encoder(nn.Module):
 
         # middle
         h = hs[-1]
-        print(h.shape)
+        #print(h.shape)
         h = self.mid.block_1(h, temb)
-        print(h.shape)
+        #print(h.shape)
         h = self.mid.attn_1(h)
-        print(h.shape)
+        #print(h.shape)
         h = self.mid.block_2(h, temb)
-        print(h.shape)
+        #print(h.shape)
 
         # end
         h = self.norm_out(h)
-        print(h.shape)
+        #print(h.shape)
         h = nonlinearity(h)
         h = self.conv_out(h)
-        print(h.shape)
+        #print(h.shape)
         return h
 
 

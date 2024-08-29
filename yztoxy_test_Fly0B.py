@@ -53,14 +53,15 @@ if __name__ == "__main__":
     parser.add_argument(
         "--steps",
         type=int,
-        default=200,
+        default=100,
         help="number of ddim sampling steps",
     )
     opt = parser.parse_args()
 
     # !!!
     #yz_dataset = ZEnhanceDataset(data_root=['/media/ExtHDD01/Dataset/paired_images/Fly0B/cycout/yzoridsp/'], data_len=[0,50],
-    yz_dataset = ZEnhanceDataset(data_root=['/media/ExtHDD01/Dataset/paired_images/Fly0B/cycout/ganori/'], data_len=[0, 50],
+    #yz_dataset = ZEnhanceDataset(data_root=['/media/ExtHDD01/Dataset/paired_images/Fly0B/cycout/ganori/'], data_len=[0, 64],
+    yz_dataset = ZEnhanceDataset(data_root=['/media/ExtHDD01/Dataset/paired_images/Fly0B/cycout/diffroi0norm/'], data_len=[0, 256],
                                     mask_config={"direction": "horizontal", "down_size": 8}, # this is not being used
                                     #mask_type="downsample",
                                     image_size=256, mode='test')
@@ -69,18 +70,31 @@ if __name__ == "__main__":
 
     # !!!
     #config = OmegaConf.load("logs/2024-04-27T11-59-39_yztoxy_ori/configs/2024-04-27T11-59-39-project.yaml")
-    if 0:
+    if 0: # GAN 0
         config = OmegaConf.load("/media/ExtHDD01/ldmlogs/Fly0B/2024-07-09T12-12-55_yztoxy_ori_Fly0B_gan_ae3_070924/configs/2024-07-09T12-12-55-project.yaml")
         model = instantiate_from_config(config.model)
         model.load_state_dict(torch.load("/media/ExtHDD01/ldmlogs/Fly0B/"
                                          "2024-07-09T12-12-55_yztoxy_ori_Fly0B_gan_ae3_070924/checkpoints/epoch=000943.ckpt")["state_dict"],
                               strict=True)
-    else:
+    elif 0: #DSP
         config = OmegaConf.load("/media/ExtHDD01/ldmlogs/Fly0B/2024-06-20T18-00-21_yztoxy_ori_Fly0B_dsp_ae3_no_lr_scale/configs/2024-06-20T18-00-21-project.yaml")
         model = instantiate_from_config(config.model)
         model.load_state_dict(torch.load("/media/ExtHDD01/ldmlogs/Fly0B/"
                                          "2024-06-20T18-00-21_yztoxy_ori_Fly0B_dsp_ae3_no_lr_scale/checkpoints/epoch=001805.ckpt")["state_dict"],
                               strict=True)
+    elif 0: # GAN x2
+        config = OmegaConf.load("/media/ExtHDD01/ldmlogs/Fly0B/2024-08-13T16-08-51_yztoxy_ori_Fly0B_gan_ae3x2/configs/2024-08-13T16-08-51-project.yaml")
+        model = instantiate_from_config(config.model)
+        model.load_state_dict(torch.load("/media/ExtHDD01/ldmlogs/Fly0B/"
+                                         "2024-08-13T16-08-51_yztoxy_ori_Fly0B_gan_ae3x2/checkpoints/epoch=000661.ckpt")["state_dict"],
+                              strict=True)
+    elif 1: # GAN x
+        config = OmegaConf.load("/media/ExtHDD01/ldmlogs/Fly0B/2024-08-14T20-24-14_yztoxy_ori_Fly0B_gan_ae3x/configs/2024-08-14T20-24-14-project.yaml")
+        model = instantiate_from_config(config.model)
+        model.load_state_dict(torch.load("/media/ExtHDD01/ldmlogs/Fly0B/"
+                                         "2024-08-14T20-24-14_yztoxy_ori_Fly0B_gan_ae3x/checkpoints/epoch=005068.ckpt")["state_dict"],
+                              strict=True)
+
 
     device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
     #device = torch.device("cpu") # why using cpu??
