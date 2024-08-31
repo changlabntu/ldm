@@ -16,7 +16,6 @@ import random
 
 def tif_loader(path, trd):
     img = tiff.imread(path).astype(np.float32)
-    print((img.min(), img.max()))
     if trd is None:
         #img = (img-img.min())/(img.max()-img.min())
         img = img/img.max()
@@ -170,19 +169,26 @@ class AEDataset(Dataset):
     '''
     img = original image
     '''
-    def __init__(self, data_root, image_size=256, loader=tif_loader, trd=None):
+    def __init__(self, data_root, image_size=256, loader=tif_loader, trd=None, mode='train'):
         self.path = data_root
 
-        self.flist = os.listdir(self.path)
-        random.shuffle(self.flist)
+        self.flist = sorted(os.listdir(self.path))
+        if mode == 'train':
+            random.shuffle(self.flist)
         split_ratio = 0.2
         num_elements_second_list = int(len(self.flist) * split_ratio)
         self.flist_set = self.set_base(num_elements_second_list)        
 
-        self.tfs = A.Compose([
-                A.RandomCrop(height=image_size, width=image_size, p=1.),
-                ToTensorV2(p=1.0),
-            ])#, additional_targets={'cond_image':'image'})
+        if mode == 'train':
+            self.tfs = A.Compose([
+                    A.RandomCrop(height=image_size, width=image_size, p=1.),
+                    ToTensorV2(p=1.0),
+                ])#, additional_targets={'cond_image':'image'})
+        else:
+            self.tfs = A.Compose([
+                    A.CenterCrop(height=image_size, width=image_size, p=1.),
+                    ToTensorV2(p=1.0),
+                ])
         self.loader = loader
         self.image_size = image_size
         self.trd = trd
@@ -210,7 +216,7 @@ class AETrain(AEDataset):
         super().__init__(**kwargs)
 
     def set_base(self, num_elements_second_list):
-        return self.flist[:-num_elements_second_list]
+        return self.flist[:num_elements_second_list]
     
 
 class AEValidation(AEDataset):
@@ -218,4 +224,4 @@ class AEValidation(AEDataset):
         super().__init__(**kwargs)
 
     def set_base(self, num_elements_second_list):
-        return self.flist[-num_elements_second_list:]
+        return self.flist[num_elements_second_list:]

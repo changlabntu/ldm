@@ -89,10 +89,10 @@ if __name__ == "__main__":
                                          "2024-08-13T16-08-51_yztoxy_ori_Fly0B_gan_ae3x2/checkpoints/epoch=000661.ckpt")["state_dict"],
                               strict=True)
     elif 1: # GAN x
-        config = OmegaConf.load("/media/ExtHDD01/ldmlogs/Fly0B/2024-08-14T20-24-14_yztoxy_ori_Fly0B_gan_ae3x/configs/2024-08-14T20-24-14-project.yaml")
+        config = OmegaConf.load("/media/ExtHDD01/ldmlogs/Fly0B/2024-08-28T23-20-49_test0828/configs/2024-08-28T23-20-49-project.yaml")
         model = instantiate_from_config(config.model)
         model.load_state_dict(torch.load("/media/ExtHDD01/ldmlogs/Fly0B/"
-                                         "2024-08-14T20-24-14_yztoxy_ori_Fly0B_gan_ae3x/checkpoints/epoch=005068.ckpt")["state_dict"],
+                                         "2024-08-28T23-20-49_test0828/checkpoints/last.ckpt")["state_dict"],
                               strict=True)
 
 
