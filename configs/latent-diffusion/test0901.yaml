@@ -48,7 +48,7 @@ model:
       params:
         embed_dim: 4
         monitor: "val/rec_loss"
-        ckpt_path: "/media/ExtHDD01/ldmlogs/Fly0B/test0.ckpt"
+        ckpt_path: "/media/ExtHDD01/ldmlogs/Fly0B/test0901.ckpt"
         ddconfig:
           double_z: True
           z_channels: 4

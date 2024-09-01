@@ -35,12 +35,13 @@ def filter_b():
 
 
 config_name = 'womac4/2024-08-31T11-48-35_womac4x3'
+# config_name = 'womac4/2024-08-30T06-47-48_womac4x3'
 
 config = OmegaConf.load(
     "/media/ExtHDD01/ldmlogs/" + config_name + "/configs/project.yaml")
 model = instantiate_from_config(config.model)
 model.load_state_dict(torch.load("/media/ExtHDD01/ldmlogs/" + config_name +
-                                 "/checkpoints/last.ckpt", map_location="cpu")["state_dict"],strict=True)
+                                 "/checkpoints/epoch=000129.ckpt", map_location="cpu")["state_dict"],strict=True)
 
 dataset = Dataset(data_root="/media/ExtHDD01/Dataset/paired_images/womac4/full/a",
                   image_size=256,
@@ -54,5 +55,5 @@ print(x['file_path_'])
 x = x['image']
 imagesc(x.squeeze())
 
-dec, posterior = model.forward(x.unsqueeze(0), sample_posterior=False)
+dec, posterior = model.forward(x.unsqueeze(0), sample_posterior=True)
 imagesc(dec.detach().squeeze())
