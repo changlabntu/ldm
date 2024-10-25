@@ -147,7 +147,7 @@ class ZEnhanceDataset(Dataset):
             if self.direction == 'vertical':
                 yz_like_img.append(img[:, w_s:w_s + 1])
                 w_s += self.down_size
-            else:
+            elif self.direction == 'horizontal':
                 yz_like_img.append(img[h_s:h_s + 1, :])
                 h_s += self.down_size
         yz_like_img = np.squeeze(yz_like_img, axis=1)
