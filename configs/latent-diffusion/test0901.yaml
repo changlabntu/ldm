@@ -48,7 +48,7 @@ model:
       params:
         embed_dim: 4
         monitor: "val/rec_loss"
-        ckpt_path: "/media/ExtHDD01/ldmlogs/Fly0B/test0901.ckpt"
+        ckpt_path: "/home/gary/workspace/logs/Fly0B/ae/test0901.ckpt"
         ddconfig:
           double_z: True
           z_channels: 4
@@ -76,7 +76,7 @@ data:
       target: ldm.data.yztoxynorescale.ZEnhanceTrain #!!!!
       params:
         #data_root: ["/workspace/Data/Fly0B/ganxy","/workspace/Data/Fly0B/ganori"]
-        data_root: ["/media/ExtHDD01/Dataset/paired_images/Fly0B/cycout/ganxy","/media/ExtHDD01/Dataset/paired_images/Fly0B/cycout/ganori"]
+        data_root: ["/home/gary/workspace/Data/Fly0B/ganxy","/home/gary/workspace/Data/Fly0B/ganori"]
         mask_config:
           direction: "horizontal"
           down_size: 8
@@ -86,7 +86,7 @@ data:
       target: ldm.data.yztoxynorescale.ZEnhanceValidation
       params:
         #data_root: ["/workspace/Data/Fly0B/ganxy","/workspace/Data/Fly0B/ganori"]
-        data_root: ["/media/ExtHDD01/Dataset/paired_images/Fly0B/cycout/ganxy","/media/ExtHDD01/Dataset/paired_images/Fly0B/cycout/ganori"]
+        data_root: ["/home/gary/workspace/Data/Fly0B/ganxy","/home/gary/workspace/Data/Fly0B/ganori"]
         mask_config:
           direction: "horizontal"
           down_size: 8

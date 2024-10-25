@@ -14,6 +14,7 @@ from ldm.data.yztoxynorescale import ZEnhanceDataset
 import cv2
 import time
 
+
 def make_batch(image, mask, device):
     image = np.array(Image.open(image).convert("RGB"))
     image = image.astype(np.float32)/255.0
@@ -61,7 +62,7 @@ if __name__ == "__main__":
     # !!!
     #yz_dataset = ZEnhanceDataset(data_root=['/media/ExtHDD01/Dataset/paired_images/Fly0B/cycout/yzoridsp/'], data_len=[0,50],
     #yz_dataset = ZEnhanceDataset(data_root=['/media/ExtHDD01/Dataset/paired_images/Fly0B/cycout/ganori/'], data_len=[0, 64],
-    yz_dataset = ZEnhanceDataset(data_root=['/media/ExtHDD01/Dataset/paired_images/Fly0B/cycout/diffroi0norm/'], data_len=[0, 256],
+    yz_dataset = ZEnhanceDataset(data_root=['/media/ExtHDD01/Dataset/paired_images/Fly0B/diffout/diffroi0norm/'], data_len=[0, 256],
                                     mask_config={"direction": "horizontal", "down_size": 8}, # this is not being used
                                     #mask_type="downsample",
                                     image_size=256, mode='test')
@@ -89,10 +90,10 @@ if __name__ == "__main__":
                                          "2024-08-13T16-08-51_yztoxy_ori_Fly0B_gan_ae3x2/checkpoints/epoch=000661.ckpt")["state_dict"],
                               strict=True)
     elif 1: # GAN x
-        config = OmegaConf.load("/media/ExtHDD01/ldmlogs/Fly0B/2024-08-28T23-20-49_test0828/configs/2024-08-28T23-20-49-project.yaml")
+        config = OmegaConf.load("/media/ExtHDD01/ldmlogs/Fly0B/2024-09-01T13-07-14_test0901/configs/project.yaml")
         model = instantiate_from_config(config.model)
         model.load_state_dict(torch.load("/media/ExtHDD01/ldmlogs/Fly0B/"
-                                         "2024-08-28T23-20-49_test0828/checkpoints/last.ckpt")["state_dict"],
+                                         "2024-09-01T13-07-14_test0901/checkpoints/epoch=004109.ckpt")["state_dict"],
                               strict=True)
 
 

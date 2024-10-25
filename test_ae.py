@@ -34,14 +34,14 @@ def filter_b():
             os.system(f"cp {f} {f.replace('b', 'bclean')}")
 
 
-config_name = 'womac4/2024-08-31T11-48-35_womac4x3'
+config_name = 'womac4/2024-09-01T00-05-26_womac4x3disc'
 # config_name = 'womac4/2024-08-30T06-47-48_womac4x3'
 
-config = OmegaConf.load(
-    "/media/ExtHDD01/ldmlogs/" + config_name + "/configs/project.yaml")
+file_name = sorted(glob.glob("/media/ExtHDD01/ldmlogs/" + config_name + "/configs/*project.yaml"))[0]
+config = OmegaConf.load(file_name)
 model = instantiate_from_config(config.model)
 model.load_state_dict(torch.load("/media/ExtHDD01/ldmlogs/" + config_name +
-                                 "/checkpoints/epoch=000129.ckpt", map_location="cpu")["state_dict"],strict=True)
+                                 "/checkpoints/last.ckpt", map_location="cpu")["state_dict"],strict=True)
 
 dataset = Dataset(data_root="/media/ExtHDD01/Dataset/paired_images/womac4/full/a",
                   image_size=256,
